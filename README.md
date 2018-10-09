@@ -108,7 +108,8 @@ There are 3 public methods on cubies:
 
 # CubeController Script
 
-The CubeController maintains the cubie matrix, tracks the state of the cube, and is the top level controller for the cube.
+- The CubeController maintains the cubie matrix, tracks the state of the cube, and is the top level controller for the cube.
+- Parented to the CubeController GameObject
 
 **Fields**
 
@@ -159,19 +160,25 @@ The CubeController maintains the cubie matrix, tracks the state of the cube, and
 
 # TouchController
 
-This script controls user input by detecting swipes on the cube.
+- This script controls user input by detecting swipes on the cube.
+- It is parented to the TouchController GameObject.
+- The TouchController has 27 box colliders as children which are all on the "faces" layer. 
+- These box colliders do not move when the cube and slices of the cube are rotated.  
+- They stay in place and represent the locations where the cube can be touched.
+- It maintains a *touchList* representing the box colliders touched in the last gesture.
 
 **Update**
 
-- Calls *DetectTouch* while mouse button is down, or screen being touched.
-- When mouse button is released, or touch is complete, it calls *ProcessTouch* to figure out which of the 27 face colliders where touched as part of the gesture.
+- *DetectTouch* is called each frame if the mouse button is down, or screen being touched.
+- *ProcessTouch* is called when the mouse button is released, or touch is complete, to figure out which of the 27 face colliders were touched as part of the gesture.
 
 **Detect Touch**
 
 - Called each frame by the Update method to detect which faces are being touched.
-- Uses raycasting to raycast out from the touch location.
-- The 27 box colliders that are children of the Touch Controller all belong to a layer called "faces"
-- The raycast uses a layermask to detect which of these 27 box colliders are touched and adds them the *touchList*
+- Uses a raycast to determine which collider was touched.
+- The 27 box colliders that are children of the Touch Controller all belong to a layer called "faces".
+- The raycast uses a layermask to detect which of these 27 box colliders was touched. 
+- The collider touched is added to the *touchList* (but only if it isn't already in the list).
 
 **Process Touch**
 
@@ -180,9 +187,9 @@ This script controls user input by detecting swipes on the cube.
 - These box colliders do not move position as the cube is rotated so always represent the same axis and position on the cube.
 - The X, Y, Z represent the axis the face represents.
 - The 1st number represents row, and the 2nd number represents the column.
-- I look to see if 2 or more multiple faces on the same axis and on either the same row or column have been touched.
-- From this data I can determine how to animate the cube using: axis, slice, direction, and animationType
-- I then call the StartRotation method on the CubeController to start the animation using this data.
+- The code looks to see if 2 or more faces on the same axis and on either the same row or column have been touched.
+- From this data the code can determine how to animate the cube using: axis, slice, direction, and animationType
+- The code then calls the StartRotation method on the CubeController to start the animation using this data.
 
 # WinController
 
@@ -201,4 +208,54 @@ This script controls user input by detecting swipes on the cube.
 
 - Returns a *Dictionary<color, direction>* that holds the color and direction of each *center* cubie.
 - Used by *CheckForWin* to determine if each cubie is in the correct position.
+
+# Exploder
+
+- This script animates the cube to explode and then return to its original solved position.
+- Parented to the CubeController GameObject
+
+**Public Fields**
+
+*power, returnSpeed, rotationalSpeed, exlposionLength*
+
+These can be set in the inspector to customize the speed of the animation.
+
+**Start**
+
+- gets reference to *mirrors, cubies and core cubie*.
+- calls *SaveOriginals*
+
+**Update**
+
+- if *reassembling* = true then moves cubies back together and rotates them back toward original positions.
+- reassembling is complete when the cubes and rotations are close to their original positions,
+- once reassembling is complete mirrors and core are set back to active.
+
+**Public Methods**
+
+*Explode*
+
+- Called from the Reset button to start the Explode animation
+- Adds a rigid body to each cubie
+- Then applies a force to each cubie to cause an explosion.
+- Hides the mirrors
+- Hides the core cubie
+- Startes the *Reassemble* coroutine
+
+**Private Methods**
+
+*Reassemble Coroutine*
+
+- Waits until the *exlposionLength* has elapsed.
+- Removes the rigid body from each cubie.
+- Sets the *reassembling* state to true.
+
+*SaveOriginals*
+
+- Saves the original transforms of all the cubies (so they can be restored after the re-assemble is complete)
+
+
+
+
+
 
