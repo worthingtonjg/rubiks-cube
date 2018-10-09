@@ -195,7 +195,7 @@ This script controls user input by detecting swipes on the cube.
 - returns true if all cubies are in the correct position.
 - using the center pieces and the direction each center piece is facing as a reference it checks to see if each cubie is in the correct position.
 
-> Note: This method could be used to set the *gameState* to a *win* state to play win sequence.  Currently when you solve the cube, nothing special happens.
+> Note: This method could be used to set the *gameState* to a *win* state to play a win sequence (animate the cube to spin really fast, shoot fireworks, show a "Cube Solved" message, etc.)  Currently when you solve the cube, nothing special happens.
 
 **GetColorDirectionDictionary**
 
