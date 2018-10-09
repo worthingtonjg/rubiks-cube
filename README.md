@@ -48,7 +48,7 @@ The *TouchController* controls user input for the cube as follows:
 
 **CubeController**
 
-The *CubeController* defines the visual layout of the cube, controls the cube as follows:
+The *CubeController* defines the visual layout of the cube, and controls the cube as follows:
 
 - *CubeController.cs* - script that maintains state, tracks cubies, and controls rotation of the cube and the slices in the cube.
 - *Contains 27 Cubies* - each cubie represents one piece of the cube (1 core, 8 corners, 12 edges, 6 centers)
