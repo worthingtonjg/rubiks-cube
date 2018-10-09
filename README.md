@@ -186,9 +186,9 @@ This script controls user input by detecting swipes on the cube.
 
 # WinController
 
-- This script listens for *OnRotationComplete* action to fire on the CubeController
+- This script listens for *OnRotationComplete* action to fire on the CubeController.
 - If the current *gameState* is *playing* then it calls the *CheckForWin* method to see if the cube is solved.
-- It is parented to the CubeController GameObject
+- It is parented to the CubeController GameObject.
 
 **CheckForWin**
 
