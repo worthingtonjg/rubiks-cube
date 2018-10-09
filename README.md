@@ -77,27 +77,41 @@ The cube consists of a matrix of 27 cubies (3x3x3).  The center cubie is at 0,0,
 
 # Cubie Script
 
-Each cubie has a cubie.cs script added to it.
-
-**EnumCubieType**
-
-There are 4 types of cubies defined using the enum: 
-
-```c#
-public enum EnumCubieType { core, center, edge, corner }
-```
+Each cubie has a cubie.cs script associated with it.  This script allows us to set the type of cubie and find out information about the cubie like, the colors visible on it, which way the cubie is facing, and if the cubie is in the correct (solved position).
 
 **Public Fields**
 
-- CubieType: represents the type of cube - core, center, edge, corner
+- *CubieType* - represents the type of cube - core, center, edge, corner
 
-**Methods**
+**Public Methods**
 
 There are 3 public methods on cubies:
 
-1.  GetColors => Returns the colors of the cubie.
-2.  GetCenterDirection => Called on center cubies only, determines which side the face is facing (
-3.  InPosition => returns true if the cubie is in the correct (solved) position
+*GetColors* 
+
+- Returns the colors of the cubie.  
+- Used by the WinController to get the color for each of the center cubies.
+
+*GetCenterDirection* 
+
+- Called on center cubies only, determines which side the cubie is facing.
+- Used by the WinController to determine which side each center cubie is facing.
+
+*InPosition* 
+
+- Returns true if the cubie is in the correct (solved) position.
+- Called by the WinController to determine if each cubie is in the correct position.
+
+**Private Methods**
+
+*IsFaceCorrect*
+
+- Returns true of a cubie's face is facing the correct side of the cube.
+
+*GetSide*
+
+- Raycasts out in the specified direction and returns the name of the SideCollider it hits.
+- Used to determine which side a cubie face is facing.
 
 # CubeController Script
 
