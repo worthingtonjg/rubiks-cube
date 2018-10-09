@@ -1,6 +1,6 @@
 # rubiks-cube
 
-This is an implementation of the Rubiks Cube using Unity3d.  I was bored one weekend and decided I wanted to create a Rubiks cube in Unity.
+This is an implementation of the Rubiks Cube using Unity3d.  I was bored one weekend and decided I wanted to create a Rubiks cube in Unity.  Below is a link to the WebGL demo, and a description of how it works.
 
 # WebGL Demo
 
@@ -111,24 +111,81 @@ There are 3 public methods on cubies:
 - The CubeController maintains the cubie matrix, tracks the state of the cube, and is the top level controller for the cube.
 - Parented to the CubeController GameObject
 
-**Fields**
+**Public Fields**
 
-- EnumCubeAnimState state => 
-- EnumAnimType animationType => 
-- float rotationSpeed = 300f => 
-- EnumAxis rotationAxis => 
-- EnumDirection rotationDirection => 
-- int slice => 
-- EnumGameState gameState => 
+Most these fields probably do not need to be public, but makes it easy to see what is happening in the scene view when the game is running in the editor.
+
+- EnumCubeAnimState state => idle, animating
+- EnumAnimType animationType => cube, slice
+- float rotationSpeed = 300f => speed of the rotation
+- EnumAxis rotationAxis => x, y, z
+- EnumDirection rotationDirection => positive, negative
+- int slice => 0,1,2
+- EnumGameState gameState => shuffling, playing
+
+**Start Method**
+
+- History is initialized (keeps track of all moves)
+- cubies array is populated by finding "cubies" by tag.
+- the animation state of the cube is set to "idle"
+- The slices are initialized (3 lists - x, y and z), each list containing three slices (used to rotate cube and slices of the cube)
+
+**Update Method**
+
+- If the animation *state* of the cube is *animating* then we call *AnimateRotate* to continue the current animation
+- otherwise we do nothing (although we could add other states later - like a winAnimation state, etc.)
 
 **Public Methods**
 
-- StartRotation => 
-- GetCubies => 
-- Undo => 
-- ResetHistory => 
-- DoRotate => 
-- SetupCubeAnimation => 
+*StartRotation*
+
+- Called from the *CubeShuffler* and *TouchContoller* to start the animation of a slice.
+- Sets the axis, animation type (cube or slice), rotation direction, slice, and rotation speed for the animation.
+- If the game state is playing the move is pushed onto History stack (so we can undo later).
+- *DoRotate* is called to start the animation.
+
+*GetCubies*
+
+Returns the list of cubies that make up the cube.
+
+*Undo*
+
+Uses the history to undo the last move.
+
+*ResetHistory*
+
+Clears the History of moves (called when the cube is Reset).
+
+**Private Methods**
+
+*DoRotate*
+
+- Will only start the animation if the animation *state* is *idle*
+- Sets the animation *state* to *animating*
+- Calls *RebuildSlices* 
+- Calls either *SetupCubeAnimation* or *SetupSliceAnimation* based on if we are rotating the whole cube or just a slice of the cube.
+
+*RebuildSlices*
+
+- Rebuilds the slices (x, y, z) based on the position of each cubie.
+
+*SetupCubeAnimation*
+
+- Determines the target rotation based on the axis and direction.
+
+*SetupSliceAnimation*
+
+- Determines the slices to rotate based on the axis.
+- Uses the center cubie of the slice to parent the other cubies in the slice to, so the rotation will happen around the position of that center cubie.
+- Determines the target rotation based on the axis and direction.
+
+*AnimateRotation*
+
+- Rotates the cube or slice toward the target rotation using the rotation speed
+- If the target rotation is reached then the animation state is set to idle, and the RotationComplete Action is Invoked
+- The RotationComplete can be listened to by other scripts, so methods in those scripts can be fired when the rotation is complete, for example the WinController will check to see if the cube is solved when RotationComplete action is invoked.
+
+
 
 # CubeShuffler
 
