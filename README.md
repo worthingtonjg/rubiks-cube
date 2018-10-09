@@ -131,22 +131,74 @@ The CubeController maintains the cubie matrix, tracks the state of the cube, and
 
 # CubeShuffler
 
-Script that is responsible for shuffling the cube.
+- This script that is responsible for shuffling the cube.
+- It is parented to the CubeController game object.
 
 **Public Methods**
 
-- StartShuffle => Called to start the shuffling routine.
+*StartShuffle*
+
+- Called to start the shuffling routine.
+- Determines how many shuffles will happen (ranging from 25 to 50).
+- Sets the CubeControllers *gameState* to *shuffling*.
+- Calls the *Shuffle* method, to start the shuffle.
 
 **Private Methods**
 
-- OnRotationComplete => Called by the RotationComplete delegate when the rotation animation is completed, so next shuffle can be done.
-- Shuffle => Called by StartShuffle to shuffle the cube by rotating a random slice in a random direction.
+*OnRotationComplete*
+
+- Called by the *RotationComplete* delegate of the *CubeController* when the rotation animation is completed, so next shuffle step can be executed..
+- Only executes if the current *gameState* is *shuffling*.
+- Calls *Shuffle* if haven't reached the *timesToRotate* max
+- If *timesToRotate* has been reached then sets the *gameState* to *playing* and resets the undo history.
+
+*Shuffle*
+
+- Called by StartShuffle to shuffle the cube by rotating a random slice in a random direction.
+- Called again each time a RotationComplete Event is fired on teh CubeController.
 
 # TouchController
 
-This script controls user input by detecting swipes on the cube
+This script controls user input by detecting swipes on the cube.
+
+**Update**
+
+- Calls *DetectTouch* while mouse button is down, or screen being touched.
+- When mouse button is released, or touch is complete, it calls *ProcessTouch* to figure out which of the 27 face colliders where touched as part of the gesture.
+
+**Detect Touch**
+
+- Called each frame by the Update method to detect which faces are being touched.
+- Uses raycasting to raycast out from the touch location.
+- The 27 box colliders that are children of the Touch Controller all belong to a layer called "faces"
+- The raycast uses a layermask to detect which of these 27 box colliders are touched and adds them the *touchList*
+
+**Process Touch**
+
+- Called when the mouse button is no longer being pressed, or screen is not being touched.
+- The 27 box colliders that are children of the Touch Controller are named using a pattern: FaceX01, FaceY01, FaceZ01.
+- These box colliders do not move position as the cube is rotated so always represent the same axis and position on the cube.
+- The X, Y, Z represent the axis the face represents.
+- The 1st number represents row, and the 2nd number represents the column.
+- I look to see if 2 or more multiple faces on the same axis and on either the same row or column have been touched.
+- From this data I can determine how to animate the cube using: axis, slice, direction, and animationType
+- I then call the StartRotation method on the CubeController to start the animation using this data.
 
 # WinController
 
+- This script listens for *OnRotationComplete* action to fire on the CubeController
+- If the current *gameState* is *playing* then it calls the *CheckForWin* method to see if the cube is solved.
+- It is parented to the CubeController GameObject
 
+**CheckForWin**
+
+- returns true if all cubies are in the correct position.
+- using the center pieces and the direction each center piece is facing as a reference it checks to see if each cubie is in the correct position.
+
+> Note: This method could be used to set the *gameState* to a *win* state to play win sequence.  Currently when you solve the cube, nothing special happens.
+
+**GetColorDirectionDictionary**
+
+- Returns a *Dictionary<color, direction>* that holds the color and direction of each *center* cubie.
+- Used by *CheckForWin* to determine if each cubie is in the correct position.
 
