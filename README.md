@@ -51,7 +51,8 @@ The *TouchController* controls user input for the cube as follows:
 The *CubeController* defines the visual layout of the cube, and controls the cube as follows:
 
 - *CubeController.cs* - script that maintains state, tracks cubies, and controls rotation of the cube and the slices in the cube.
-- *Contains 27 Cubies* - each cubie represents one piece of the cube (1 core, 8 corners, 12 edges, 6 centers)
+- *Contains 27 Cubies (3x3x3)* - each cubie represents one piece of the cube (1 core, 8 corners, 12 edges, 6 centers).  The center cubie is at 0,0,0 in world space, with each cubie arranged around it exactly 1 unit away.
+- Cubie model - created in blender.  Model has 7 materials: one for each side of the cube, and one for the cubie border.
 
 > See *Cubie* and *CubeController* script descriptions below for more details.
 
@@ -66,14 +67,6 @@ Three buttons:
 - *Shuffle* - Shuffles the cube by rotating random slices in random directions a random number of times (calls: CubeShuffler.StartShuffle).
 - *Undo* - Walks backward through the history of moves to undo moves one at a time (calls: CubeController.Undo).
 - *Reset* - Explodes the cube, and pulls it back to a solved cube (calls: Exploder.Explode).
-
-# 3d Model - Cubie
-
-I created a simple 3d model in blender using a cube as a base.  The model has 7 materials: one for each side of the cube, and one for the cubes border.  
-
-# The Cube
-
-The cube consists of a matrix of 27 cubies (3x3x3).  The center cubie is at 0,0,0 in world space, with each cubie arranged around it exactly 1 unit away.
 
 # Cubie Script
 
