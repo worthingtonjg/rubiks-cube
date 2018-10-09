@@ -8,11 +8,13 @@ To see the my Rubiks Cube implementation in action, try the Web GL demo link bel
 
 <https://worthingtonjg.github.io/rubiks-cube/>
 
-- You can Shuffle the cube.
-- Reset the cube (explodes the cube and re-assembles it solved).
-- You swiping a center slice of the cube will rotate the cube in the direction swiped.
-- Swiping an edge slice will rotate that particular slice.
-- You can undo your moves with the Undo button.
+Interactions:
+
+- You can *shuffle* the cube.
+- You can *reset* the cube (explodes the cube and re-assembles it solved).
+- You can swipe any *center* slice of the cube to rotate the cube in the direction swiped.
+- Swiping an *edge* slice will rotate that particular slice in the direction swiped.
+- You can *undo* your moves with the Undo button.
 
 # Scenes
 
@@ -22,9 +24,8 @@ Demo - There is a single Scene in the project, with the following setup...
 
 There are 4 cameras in the scene:
 
-- Main Camera: This is the main camera used to display the game view
-- Camera X, Camera Y, Camera Z: Three faces of the cube are not visible from the game view, these cameras are positioned on the three hidden sides and used by the mirrors to show the sides.
-- Each camera targets a seperate render texture (3 total), that projects onto a plane (creating a mirror)
+- *Main Camera*: This is the main camera used to display the game view
+- *Camera X, Camera Y, Camera Z*: Three faces of the cube are not visible from the game view, these cameras are positioned on the three hidden sides and used by the mirrors to show the sides. Each camera targets a seperate render texture (3 total), that projects onto a plane (creating a mirror).
 - There are no scripts associated with the cameras.
 
 **Lights**
@@ -37,22 +38,22 @@ The mirrors in the scene are simply planes that have a render texture applied to
 
 **TouchController**
 
-The TouchController controls user input for the cube as follows:
+The *TouchController* controls user input for the cube as follows:
 
-- TouchController.cs - script that controls the user input for the cube.
-- Contains 27 Box Colliders - one collider for each visible face on the cube, used by the TouchController.cs to detect swiping direction.
+- *TouchController.cs* - script that controls the user input for the cube.
+- *Contains 27 Box Colliders* - one collider for each visible face on the cube, used by the *TouchController.cs* to detect swiping direction.
 
-> There are actually 54 faces on the cube, but only 27 are visible at any one time, the box colliders that represent these 27 visible faces do not rotate with the cube.  Rather they stay in place and are used to detect touch on the visible faces of the cube.
-> See TouchController Script description below for more details.
+> Note: There are actually 54 faces on the cube, but only 27 are visible at any one time, the box colliders that represent these 27 visible faces do not rotate with the cube.  Rather they stay in place and are used to detect touch on the visible faces of the cube.
+> See *TouchController* Script description below for more details.
 
 **CubeController**
 
-The CubeController defines the visual layout of the cube, controls the cube as follows:
+The *CubeController* defines the visual layout of the cube, controls the cube as follows:
 
-- CubeController.cs - script that maintains state, tracks cubies, and controls rotation of the cube and the slices in the cube.
-- Contains 27 Cubies - each cubie represents one piece of the cube (1 core, 8 corners, 12 edges, 6 centers)
+- *CubeController.cs* - script that maintains state, tracks cubies, and controls rotation of the cube and the slices in the cube.
+- *Contains 27 Cubies* - each cubie represents one piece of the cube (1 core, 8 corners, 12 edges, 6 centers)
 
-> See Cubie and CubeController script descriptions below for more details.
+> See *Cubie* and *CubeController* script descriptions below for more details.
 
 **SideColliders**
 
@@ -62,9 +63,9 @@ There are 6 side colliders, one for each side of the cube (foward, back, up, dow
 
 Three buttons:
 
-- Shuffle => Shuffles the cube by rotating random slices in random directions a random number of times (calls: CubeShuffler.StartShuffle).
-- Undo => Walks backward through the history of moves to undo moves one at a time (calls: CubeController.Undo).
-- Reset => Explodes the cube, and pulls it back to a solved cube (calls: Exploder.Explode).
+- *Shuffle* - Shuffles the cube by rotating random slices in random directions a random number of times (calls: CubeShuffler.StartShuffle).
+- *Undo* - Walks backward through the history of moves to undo moves one at a time (calls: CubeController.Undo).
+- *Reset* - Explodes the cube, and pulls it back to a solved cube (calls: Exploder.Explode).
 
 # 3d Model - Cubie
 
